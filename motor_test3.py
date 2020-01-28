@@ -28,11 +28,13 @@ while(loop):
 			counter -= 1
 		else:
 			counter += 1
-		print(str(pin_a.is_pressed) + " " + str(pin_b.is_pressed) + " " + str(pin_z.is_pressed) + " " + str(counter))
+		#print(str(pin_a.is_pressed) + " " + str(pin_b.is_pressed) + " " + str(pin_z.is_pressed) + " " + str(counter))
+		print(str(pin_a.is_pressed) + " " + str(pin_b.is_pressed) + " " + str(pin_z.is_pressed))
 		a = pin_a.is_pressed
 		prev_a = a
 		b = pin_b.is_pressed
 		prev_b = b
 	loop = pin_z.is_pressed or prev_z
 	prev_z = pin_z.is_pressed
+print(str(counter))
 device.off()
