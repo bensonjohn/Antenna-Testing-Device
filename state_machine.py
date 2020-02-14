@@ -11,6 +11,7 @@ class Motor_State(Enum):
 	count_error = 7
 	fatal_error = 8
 	idle = 9
+    stop = 10
 
 class Motor_State_Machine:
 
@@ -88,7 +89,8 @@ class Motor_State_Machine:
 		if not stop and not pause:
 			if a not b and z:
 				future_state = Motor_State.s3
-				return up_down=False, count_enable=False, no_error=True, at_zero=False
+				#up_down, count_enable, no_error, at_zero
+                return False, False, True, False
 			elif not a and not b and z:
 				future_state = Motor_State.s0
 			elif a and b:
@@ -100,7 +102,8 @@ class Motor_State_Machine:
 		elif pause:
 			future_state = Motor_State.idle
 		previous_state = Motor_State.s3
-		return up_down=False, count_enable=False, no_error=True, at_zero=False
+        #up_down, count_enable, no_error, at_zero
+		return False, False, True, False
 
 	def zs1(a, b, z, start, stop, pause):
 		if not stop and not pause:
@@ -110,7 +113,10 @@ class Motor_State_Machine:
 				return False, False, True, True
 			if a and b and not z:
 				future_state = Motor_State.zs2
-			#fatal error conditions?
+			elif not a and not b :
+				future_state = Motor_State.count_error
+			elif a not b:
+				future_state = Motor_State.fatal_error
 		elif stop:
 			future_state = Motor_State.stop
 		elif pause:
@@ -127,7 +133,10 @@ class Motor_State_Machine:
 				return False, False, True, True
 			elif a and not b and not z:
 				future_state = Motor_State.zs3
-			#fatal error conditions?
+			elif not a and b:
+				future_state = Motor_State.count_error
+			elif not a not b:
+				future_state = Motor_State.fatal_error
 		elif stop:
 			future_state = Motor_State.stop
 		elif pause:
@@ -144,6 +153,10 @@ class Motor_State_Machine:
 				return False, False, True, True
 			elif not a and not b and not z:
 				future_state = Motor_State.s0
+            elif a and b:
+				future_state = Motor_State.count_error
+			elif not a and b:
+				future_state = Motor_State.fatal_error
 		elif stop:
 			future_state = Motor_State.stop
 		elif pause:
@@ -151,6 +164,32 @@ class Motor_State_Machine:
 		previous_state = Motor_State.zs3
 		#up_down, count_enable, no_error, at_zero
 		return False, False, True, True
+        
+    def count_error(a, b, z, start, stop, pause):
+        future_state = previous_state
+        previous = Motor_State.count_error
+        #up_down, count_enable, no_error, at_zero
+		return True, False, True, False
+        
+    def fatal_error(a, b, z, start, stop, pause):
+        future_state = Motor_State.stop
+        previous = Motor_State.fatal_error
+        #up_down, count_enable, no_error, at_zero
+        return True, False, False, False
+        
+    def idle(a, b, z, start, stop, pause):
+        if start:
+            future_state = previous_state
+            previous = Motor_State.idle
+            #up_down, count_enable, no_error, at_zero
+            return True, True, True, False
+        elif:
+            future_state = Motor_State.idle
+            #up_down, count_enable, no_error, at_zero
+            return True, True, True, False
+    
+    def stop(a, b, z, start, stop, pause):
+        return True, True, True, True
 
 	state_functions = { Motor_State.s0: s0,
 				Motor_State.s1: s1,
@@ -159,7 +198,8 @@ class Motor_State_Machine:
 				Motor_State.zs1: zs1,
 				Motor_State.zs2: zs2,
 				Motor_State.zs3: zs3,
-				#Motor_State.count_error: count_error,
-				#Motor_State.fatal_error: fatal_error,
-				#Motor_State.idle: idle,
+				Motor_State.count_error: count_error,
+				Motor_State.fatal_error: fatal_error,
+				Motor_State.idle: idle,
+                Motor_State.stop: stop
 				}
