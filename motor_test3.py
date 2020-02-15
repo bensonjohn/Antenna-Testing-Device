@@ -18,18 +18,19 @@ prev_z = True
 counter = 0
 
 loop = True
-while(loop):
+
+while(True):
 	device.on()
-	sleep(.001)
+	sleep(.01)
 	device.off()
-	sleep(.001)
+	sleep(.01)
 	if a != pin_a.is_pressed or b != pin_b.is_pressed:
 		if pin_a.is_pressed == prev_a and pin_b.is_pressed == prev_b:
 			counter -= 1
 		else:
 			counter += 1
-		#print(str(pin_a.is_pressed) + " " + str(pin_b.is_pressed) + " " + str(pin_z.is_pressed) + " " + str(counter))
-		print(str(pin_a.is_pressed) + " " + str(pin_b.is_pressed) + " " + str(pin_z.is_pressed))
+		print(str(int(pin_a.is_pressed)) + " " + str(int(pin_b.is_pressed)) + " " + str(int(pin_z.is_pressed)) + " " + str(counter))
+		#print(str(pin_a.is_pressed) + " " + str(pin_b.is_pressed) + " " + str(pin_z.is_pressed))
 		a = pin_a.is_pressed
 		prev_a = a
 		b = pin_b.is_pressed
