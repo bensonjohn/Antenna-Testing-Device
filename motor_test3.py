@@ -19,11 +19,13 @@ counter = 0
 
 loop = True
 
-while(True):
+delay = .001
+
+while(loop):
 	device.on()
-	sleep(.01)
+	sleep(delay)
 	device.off()
-	sleep(.01)
+	sleep(delay)
 	if a != pin_a.is_pressed or b != pin_b.is_pressed:
 		if pin_a.is_pressed == prev_a and pin_b.is_pressed == prev_b:
 			counter -= 1
